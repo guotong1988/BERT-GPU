@@ -19,7 +19,7 @@ from __future__ import division
 from __future__ import print_function
 import time
 import os
-import modeling
+import dense_modeling as modeling
 import optimization_gpu
 import tensorflow as tf
 
@@ -700,11 +700,11 @@ def main(_):
                     )
                     tower_grads.append(grads)
                     # keep track of loss across all GPUs
-                    train_perplexity = loss
+                    train_perplexity += loss
 
         average_grads = average_gradients(tower_grads, None, None)
         average_grads, norm_summary_ops = clip_grads(average_grads, 10.0, True, global_step)
-        # train_perplexity = tf.exp(train_perplexity / n_gpus)
+        train_perplexity = tf.exp(train_perplexity / n_gpus)
         train_op = optimizer.apply_gradients(average_grads, global_step=global_step)
         init = tf.global_variables_initializer()
     with tf.Session(config=tf.ConfigProto(
