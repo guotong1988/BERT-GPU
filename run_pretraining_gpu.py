@@ -19,7 +19,7 @@ from __future__ import division
 from __future__ import print_function
 import time
 import os
-import dense_modeling as modeling
+import modeling
 import optimization_gpu
 import tensorflow as tf
 
