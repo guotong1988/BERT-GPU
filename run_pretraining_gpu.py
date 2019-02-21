@@ -34,7 +34,7 @@ flags.DEFINE_string(
     "This specifies the model architecture.")
 
 flags.DEFINE_string(
-    "input_file", "tmp_data/sample.tfrecords",
+    "input_file", "tmp_data/sample.tfrecords,tmp_data/sample2.tfrecords",
     "Input TF example files (can be a glob or comma separated).")
 
 flags.DEFINE_string(
@@ -47,7 +47,7 @@ flags.DEFINE_string(
     "Initial checkpoint (usually from a pre-trained BERT model).")
 
 flags.DEFINE_integer(
-    "max_seq_length", 128,
+    "max_seq_length", 64,
     "The maximum total input sequence length after WordPiece tokenization. "
     "Sequences longer than this will be truncated, and sequences shorter "
     "than this will be padded. Must match data generation.")
@@ -623,7 +623,7 @@ def main(_):
   if FLAGS.do_train:
     tf.logging.info("***** Running training *****")
     tf.logging.info("  Batch size = %d", FLAGS.train_batch_size)
-    n_gpus = 3
+    n_gpus = 4
     batch_size = FLAGS.train_batch_size
     d = input_fn(input_files,FLAGS.train_batch_size*n_gpus,FLAGS.max_seq_length,
                  FLAGS.max_predictions_per_seq,True)
@@ -707,6 +707,7 @@ def main(_):
         train_perplexity = tf.exp(train_perplexity / n_gpus)
         train_op = optimizer.apply_gradients(average_grads, global_step=global_step)
         init = tf.global_variables_initializer()
+        saver = tf.train.Saver(tf.global_variables(), max_to_keep=2)
     with tf.Session(config=tf.ConfigProto(
             allow_soft_placement=True)) as sess:
         sess.run(init)
@@ -722,10 +723,14 @@ def main(_):
             count += 1
             if count%100==0:
                 print("------------")
-                print(time.time() - t0," s")
+                print(time.time() - t0," ms")
                 t0 = time.time()
                 print("loss ",sum/count)
                 sum=0
+
+            if count%10000==0:
+                checkpoint_path = os.path.join(FLAGS.output_dir, 'model.ckpt')
+                saver.save(sess, checkpoint_path, global_step=global_step)
 
 
   if FLAGS.do_eval:
