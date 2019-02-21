@@ -27,14 +27,17 @@ flags = tf.flags
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string("input_file", "sample_text.txt",
+flags.DEFINE_string("input_dir", "/data1/tong.guo/1-billion-word-language-modeling-benchmark-r13output/training-monolingual.tokenized.shuffled",
+                    "Input raw text file (or comma-separated list of files).")
+
+flags.DEFINE_string("input_file", "data/xab",
                     "Input raw text file (or comma-separated list of files).")
 
 flags.DEFINE_string(
-    "output_file", "tmp_data/sample.tfrecords",
+    "output_file", "tmp_data/sample2.tfrecords",
     "Output TF example file (or comma-separated list of files).")
 
-flags.DEFINE_string("vocab_file", "vocab.txt",
+flags.DEFINE_string("vocab_file", "vocab/vocab.txt",
                     "The vocabulary file that the BERT model was trained on.")
 
 flags.DEFINE_bool(
@@ -42,7 +45,7 @@ flags.DEFINE_bool(
     "Whether to lower case the input text. Should be True for uncased "
     "models and False for cased models.")
 
-flags.DEFINE_integer("max_seq_length", 128, "Maximum sequence length.")
+flags.DEFINE_integer("max_seq_length", 64, "Maximum sequence length.")
 
 flags.DEFINE_integer("max_predictions_per_seq", 20,
                      "Maximum number of masked LM predictions per sequence.")
@@ -177,7 +180,7 @@ def create_training_instances(input_files, tokenizer, max_seq_length,
                               max_predictions_per_seq, rng):
   """Create `TrainingInstance`s from raw text."""
   all_documents = [[]]
-
+  index=0
   # Input file format:
   # (1) One sentence per line. These should ideally be actual sentences, not
   # entire paragraphs or arbitrary spans of text. (Because we use the
@@ -187,6 +190,9 @@ def create_training_instances(input_files, tokenizer, max_seq_length,
   for input_file in input_files:
     with tf.gfile.GFile(input_file, "r") as reader:
       while True:
+        index+=1
+        if index%1000==0:
+          print(index)
         line = tokenization.convert_to_unicode(reader.readline())
         if not line:
           break
@@ -207,6 +213,8 @@ def create_training_instances(input_files, tokenizer, max_seq_length,
   instances = []
   for _ in range(dupe_factor):
     for document_index in range(len(all_documents)):
+      if document_index%1000==0:
+        print(document_index)
       instances.extend(
           create_instances_from_document(
               all_documents, document_index, max_seq_length, short_seq_prob,
@@ -405,6 +413,7 @@ def truncate_seq_pair(tokens_a, tokens_b, max_num_tokens, rng):
     else:
       trunc_tokens.pop()
 
+import os
 
 def main(_):
   tf.logging.set_verbosity(tf.logging.INFO)
@@ -412,7 +421,7 @@ def main(_):
   tokenizer = tokenization.FullTokenizer(
       vocab_file=FLAGS.vocab_file, do_lower_case=FLAGS.do_lower_case)
 
-  input_files = []
+  input_files = []#[FLAGS.input_dir+"/"+f for f in os.listdir(FLAGS.input_dir)]
   for input_pattern in FLAGS.input_file.split(","):
     input_files.extend(tf.gfile.Glob(input_pattern))
 
