@@ -2,6 +2,12 @@
 
 BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
+# REQUIREMENT
+
+python 3
+
+tensorflow 1.12.0
+
 # TRAINING
 
 1,`create_pretraining_data.py`
