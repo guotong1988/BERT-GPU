@@ -12,9 +12,9 @@ tensorflow 1.12.0
 
 0, edit the input and output file name in `create_pretraining_data.py` and `run_pretraining_gpu.py`
 
-1,`create_pretraining_data.py`
+1, run `create_pretraining_data.py`
 
-2,`run_pretraining_gpu.py`
+2, run `run_pretraining_gpu.py`
 
 # PARAMETERS
 
