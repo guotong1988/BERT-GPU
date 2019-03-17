@@ -723,7 +723,7 @@ def main(_):
             count += 1
             if count%100==0:
                 print("------------")
-                print(time.time() - t0," ms")
+                print(time.time() - t0," s")
                 t0 = time.time()
                 print("loss ",sum/count)
                 sum=0
