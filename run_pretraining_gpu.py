@@ -644,7 +644,8 @@ def main(_):
     next_sentence_labels_list = tf.split(features["next_sentence_labels"], n_gpus, axis=0)
 
     # multi-gpu train
-    with tf.device('/cpu:0'):
+    # with tf.device('/cpu:0'):
+    if True:    
         optimizer = optimization_gpu.create_optimizer(
             None, FLAGS.learning_rate, FLAGS.num_train_steps, FLAGS.num_warmup_steps, False)
 
