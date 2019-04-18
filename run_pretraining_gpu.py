@@ -28,6 +28,11 @@ flags = tf.flags
 FLAGS = flags.FLAGS
 
 ## Required parameters
+
+flags.DEFINE_string(
+    "n_gpus", 6,
+    "gpu number")
+
 flags.DEFINE_string(
     "bert_config_file", "bert_config.json",
     "The config json file corresponding to the pre-trained BERT model. "
@@ -623,7 +628,7 @@ def main(_):
   if FLAGS.do_train:
     tf.logging.info("***** Running training *****")
     tf.logging.info("  Batch size = %d", FLAGS.train_batch_size)
-    n_gpus = 4
+    n_gpus = FLAGS.n_gpus
     batch_size = FLAGS.train_batch_size
     d = input_fn(input_files,FLAGS.train_batch_size*n_gpus,FLAGS.max_seq_length,
                  FLAGS.max_predictions_per_seq,True)
