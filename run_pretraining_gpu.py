@@ -29,7 +29,7 @@ FLAGS = flags.FLAGS
 
 ## Required parameters
 
-flags.DEFINE_string(
+flags.DEFINE_integer(
     "n_gpus", 6,
     "gpu number")
 
