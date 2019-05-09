@@ -28,10 +28,9 @@ flags = tf.flags
 FLAGS = flags.FLAGS
 
 ## Required parameters
-
 flags.DEFINE_integer(
-    "n_gpus", 6,
-    "gpu number")
+    "n_gpus", 1,
+    "GPU number")
 
 flags.DEFINE_string(
     "bert_config_file", "bert_config.json",
@@ -39,7 +38,7 @@ flags.DEFINE_string(
     "This specifies the model architecture.")
 
 flags.DEFINE_string(
-    "input_file", "tmp_data/sample.tfrecords,tmp_data/sample2.tfrecords",
+    "input_file", "tmp_data_128/sample1.tfrecords,tmp_data_128/sample2.tfrecords,tmp_data_128/sample3.tfrecords",
     "Input TF example files (can be a glob or comma separated).")
 
 flags.DEFINE_string(
@@ -52,7 +51,7 @@ flags.DEFINE_string(
     "Initial checkpoint (usually from a pre-trained BERT model).")
 
 flags.DEFINE_integer(
-    "max_seq_length", 64,
+    "max_seq_length", 128,
     "The maximum total input sequence length after WordPiece tokenization. "
     "Sequences longer than this will be truncated, and sequences shorter "
     "than this will be padded. Must match data generation.")
@@ -215,7 +214,7 @@ def clip_by_global_norm_summary(t_list, clip_norm, norm_name, variables):
     return clipped_t_list, tf_norm, summary_ops
 
 
-def clip_grads(grads, all_clip_norm_val, do_summaries, global_step):
+def clip_grads(grads, all_clip_norm_val, do_summaries):
     # grads = [(grad1, var1), (grad2, var2), ...]
     def _clip_norms(grad_and_vars, val, name):
         # grad_and_vars is a list of (g, v) pairs
@@ -591,21 +590,21 @@ def main(_):
   for input_file in input_files:
     tf.logging.info("  %s" % input_file)
 
-  tpu_cluster_resolver = None
-  if FLAGS.use_tpu and FLAGS.tpu_name:
-    tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver(
-        FLAGS.tpu_name, zone=FLAGS.tpu_zone, project=FLAGS.gcp_project)
+  # tpu_cluster_resolver = None
+  # if FLAGS.use_tpu and FLAGS.tpu_name:
+  #   tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver(
+  #       FLAGS.tpu_name, zone=FLAGS.tpu_zone, project=FLAGS.gcp_project)
 
-  is_per_host = tf.contrib.tpu.InputPipelineConfig.PER_HOST_V2
-  run_config = tf.contrib.tpu.RunConfig(
-      cluster=tpu_cluster_resolver,
-      master=FLAGS.master,
-      model_dir=FLAGS.output_dir,
-      save_checkpoints_steps=FLAGS.save_checkpoints_steps,
-      tpu_config=tf.contrib.tpu.TPUConfig(
-          iterations_per_loop=FLAGS.iterations_per_loop,
-          num_shards=FLAGS.num_tpu_cores,
-          per_host_input_for_training=is_per_host))
+  # is_per_host = tf.contrib.tpu.InputPipelineConfig.PER_HOST_V2
+  # run_config = tf.contrib.tpu.RunConfig(
+  #     cluster=tpu_cluster_resolver,
+  #     master=FLAGS.master,
+  #     model_dir=FLAGS.output_dir,
+  #     save_checkpoints_steps=FLAGS.save_checkpoints_steps,
+  #     tpu_config=tf.contrib.tpu.TPUConfig(
+  #         iterations_per_loop=FLAGS.iterations_per_loop,
+  #         num_shards=FLAGS.num_tpu_cores,
+  #         per_host_input_for_training=is_per_host))
 
   # model_fn = mode_hot_embeddings=FLAGS.usl_fn_builder(
   #   #     bert_config=bert_config,
@@ -649,16 +648,15 @@ def main(_):
     next_sentence_labels_list = tf.split(features["next_sentence_labels"], n_gpus, axis=0)
 
     # multi-gpu train
-    # with tf.device('/cpu:0'):
-    if True:    
+    if True:
         optimizer = optimization_gpu.create_optimizer(
             None, FLAGS.learning_rate, FLAGS.num_train_steps, FLAGS.num_warmup_steps, False)
 
-        global_step = tf.train.get_or_create_global_step()
+        # global_step = tf.train.get_or_create_global_step()
         # calculate the gradients on each GPU
         tower_grads = []
         models = []
-        train_perplexity = tf.get_variable(
+        loss_print = tf.get_variable(
             'train_perplexity', [],
             initializer=tf.constant_initializer(0.0), trainable=False)
         for k in range(n_gpus):
@@ -706,37 +704,43 @@ def main(_):
                     )
                     tower_grads.append(grads)
                     # keep track of loss across all GPUs
-                    train_perplexity += loss
+                    loss_print += loss
 
         average_grads = average_gradients(tower_grads, None, None)
-        average_grads, norm_summary_ops = clip_grads(average_grads, 10.0, True, global_step)
-        train_perplexity = tf.exp(train_perplexity / n_gpus)
-        train_op = optimizer.apply_gradients(average_grads, global_step=global_step)
+        average_grads, norm_summary_ops = clip_grads(average_grads, 10.0, True)
+        loss_print = loss_print / n_gpus
+        train_op = optimizer.apply_gradients(average_grads)
         init = tf.global_variables_initializer()
         saver = tf.train.Saver(tf.global_variables(), max_to_keep=2)
     with tf.Session(config=tf.ConfigProto(
             allow_soft_placement=True)) as sess:
         sess.run(init)
         sess.run(iterator.initializer)
-        sum = 0
+        checkpoint_path = os.path.join(FLAGS.output_dir, 'model.ckpt')
+        if os.path.exists(FLAGS.output_dir):
+          saver.restore(sess, checkpoint_path)
+
         count = 0
         t0 = time.time()
+        sum = 0
         while True:
 
-            _,train_perplexity_ = sess.run([train_op, train_perplexity])
-
-            sum+=train_perplexity_
+            _, loss_print_ = sess.run([train_op, loss_print])
+           # optimistic_restore(sess, checkpoint_path + "-0")
+           # loss_print_2 = sess.run([loss_print])
+            sum+=loss_print_
             count += 1
             if count%100==0:
                 print("------------")
                 print(time.time() - t0," s")
                 t0 = time.time()
                 print("loss ",sum/count)
-                sum=0
+                # print(loss_print_2)
 
-            if count%10000==0:
+            if count%300==0:
+                print("--save--")
                 checkpoint_path = os.path.join(FLAGS.output_dir, 'model.ckpt')
-                saver.save(sess, checkpoint_path, global_step=global_step)
+                saver.save(sess, checkpoint_path)
 
 
   if FLAGS.do_eval:
