@@ -730,17 +730,13 @@ def main(_):
            # loss_print_2 = sess.run([loss_print])
             sum+=loss_print_
             count += 1
-            if count%100==0:
+            if count%500==1:
                 print("------------")
                 print(time.time() - t0," s")
                 t0 = time.time()
                 print("loss ",sum/count)
                 sum=0
                 count=0
-                # print(loss_print_2)
-
-            if count%300==0:
-                print("--save--")
                 checkpoint_path = os.path.join(FLAGS.output_dir, 'model.ckpt')
                 saver.save(sess, checkpoint_path)
 
