@@ -730,7 +730,7 @@ def main(_):
            # loss_print_2 = sess.run([loss_print])
             sum+=loss_print_
             count += 1
-            if count%10000==1:
+            if count%10000==0:
                 print("------------")
                 print(time.time() - t0," s")
                 t0 = time.time()
