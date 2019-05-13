@@ -29,7 +29,7 @@ FLAGS = flags.FLAGS
 
 ## Required parameters
 flags.DEFINE_integer(
-    "n_gpus", 6,
+    "n_gpus", 10,
     "GPU number")
 
 flags.DEFINE_string(
@@ -696,7 +696,7 @@ def main(_):
             # loss_print_2 = sess.run([loss_print])
             sum+=loss_print_
             count += 1
-            if count%100==0:
+            if count%300==0:
                 print("------------")
                 print(time.time() - t0," s")
                 t0 = time.time()
