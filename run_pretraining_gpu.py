@@ -20,7 +20,7 @@ from __future__ import print_function
 import time
 import os
 import modeling
-import optimization_gpu
+# import optimization_gpu
 import tensorflow as tf
 
 flags = tf.flags
