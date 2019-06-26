@@ -23,3 +23,11 @@ Edit `n_gpus` in `run_pretraining_gpu.py`
 # DATA
 
 In `sample_text.txt`, sentence is end by \n, paragraph is splitted by empty line.
+
+# EXPERIMENT RESULT
+
+Quora question pairs English dataset,
+
+Official BERT: ACC 91.2, AUC 96.9
+
+This BERT with pretrain loss 2.05: ACC 90.1, AUC 96.3
