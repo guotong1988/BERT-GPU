@@ -14,7 +14,7 @@ tensorflow 1.13.0
 
 1, run `create_pretraining_data.py`
 
-2, run `run_pretraining_gpu.py`
+2, run `run_pretraining_gpu_v2.py`
 
 # PARAMETERS
 
