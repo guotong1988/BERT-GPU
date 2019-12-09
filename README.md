@@ -7,7 +7,7 @@ BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
 python 3
 
-tensorflow 1.13.0
+tensorflow 1.14
 
 # TRAINING
 
