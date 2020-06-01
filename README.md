@@ -3,6 +3,12 @@
 
 BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
+# MUST READ
+
+Compare to https://github.com/NVIDIA/DeepLearningExamples/blob/master/TensorFlow/LanguageModeling/BERT
+
+,this repo is just a toy example. The NVIDIA repo can run without https://github.com/horovod/horovod 
+
 # REQUIREMENT
 
 python 3
