@@ -7,7 +7,9 @@ BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
 Compare to https://github.com/NVIDIA/DeepLearningExamples/blob/master/TensorFlow/LanguageModeling/BERT
 
-,this repo is just a toy example. The NVIDIA repo can run without https://github.com/horovod/horovod 
+,this repo is just a toy example. The NVIDIA repo should run on https://github.com/horovod/horovod 
+
+And we will investigate to let this repo run without horovod with good speed.
 
 # REQUIREMENT
 
