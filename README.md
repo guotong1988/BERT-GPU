@@ -9,7 +9,7 @@ Compare to https://github.com/NVIDIA/DeepLearningExamples/blob/master/TensorFlow
 
 ,this repo is just a toy example. The NVIDIA repo should run on https://github.com/horovod/horovod 
 
-And we will investigate to let this repo run without horovod with good speed.
+And I will investigate to let this repo run without horovod with good speed.
 
 # REQUIREMENT
 
