@@ -1,4 +1,4 @@
-# BERT MULTI GPU ON ONE MACHINE WITHOIUT HOROVOD
+# BERT MULTI GPU ON ONE MACHINE WITHOUT HOROVOD
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 
 BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
