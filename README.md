@@ -1,15 +1,7 @@
-# BERT MULTI GPU
+# BERT MULTI GPU ON ONE MACHINE WITHOIUT HOROVOD
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 
 BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
-
-# MUST READ
-
-Compare to https://github.com/NVIDIA/DeepLearningExamples/blob/master/TensorFlow/LanguageModeling/BERT
-
-,this repo is just a toy example. The NVIDIA repo should run on https://github.com/horovod/horovod 
-
-And I will investigate to let this repo run without horovod with good speed.
 
 # REQUIREMENT
 
