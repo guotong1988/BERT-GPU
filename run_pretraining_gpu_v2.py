@@ -440,7 +440,7 @@ def main(_):
     )
     
     ''' IF ERROR COULD TRY
-    distribution = tf.contrib.distribute.MirroredStrategy(
+    dist_strategy = tf.contrib.distribute.MirroredStrategy(
         devices=["device:GPU:%d" % i for i in range(FLAGS.n_gpus)],
         cross_tower_ops=tf.distribute.HierarchicalCopyAllReduce())
     '''    
