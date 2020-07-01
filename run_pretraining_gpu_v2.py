@@ -181,8 +181,8 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
 
         output_spec = None
         if mode == tf.estimator.ModeKeys.TRAIN:
-            train_op = optimization_gpu.create_optimizer(
-                total_loss, learning_rate, num_train_steps, num_warmup_steps)
+            train_op = optimization.create_optimizer(
+                total_loss, learning_rate, num_train_steps, num_warmup_steps, False)
             output_spec = tf.estimator.EstimatorSpec(
                 mode=mode,
                 loss=total_loss,
