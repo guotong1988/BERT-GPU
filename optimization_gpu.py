@@ -1,17 +1,3 @@
-# coding=utf-8
-# Copyright 2018 The Google AI Language Team Authors.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Functions and classes related to optimization (weight updates)."""
 
 from __future__ import absolute_import
@@ -23,12 +9,12 @@ import tensorflow as tf
 from tensorflow.python.framework import ops
 from tensorflow.python.ops import control_flow_ops
 from tensorflow.python.ops import math_ops
-from tensorflow.python.training.optimizer import Optimizer
+from tensorflow.python.training import optimizer
 from tensorflow.python.ops import state_ops
 from tensorflow.python.ops import resource_variable_ops
 
 
-def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps):
+def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu):
     """Creates an optimizer training op."""
     global_step = tf.train.get_or_create_global_step()
 
@@ -70,6 +56,9 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps):
         epsilon=1e-6,
         exclude_from_weight_decay=["LayerNorm", "layer_norm", "bias"])
 
+    if use_tpu:
+        optimizer = tf.contrib.tpu.CrossShardOptimizer(optimizer)
+
     tvars = tf.trainable_variables()
     grads = tf.gradients(loss, tvars)
 
@@ -86,8 +75,7 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps):
     train_op = tf.group(train_op, [global_step.assign(new_global_step)])
     return train_op
 
-
-class AdamWeightDecayOptimizer(Optimizer):
+class AdamWeightDecayOptimizer(optimizer.Optimizer):
     """A basic Adam optimizer that includes "correct" L2 weight decay."""
 
     def __init__(self,
@@ -136,11 +124,11 @@ class AdamWeightDecayOptimizer(Optimizer):
 
         # Standard Adam update.
         next_m = (
-                tf.multiply(beta_1_t, m) +
-                tf.multiply(1.0 - beta_1_t, grad))
+            tf.multiply(beta_1_t, m) +
+            tf.multiply(1.0 - beta_1_t, grad))
         next_v = (
-                tf.multiply(beta_2_t, v) + tf.multiply(1.0 - beta_2_t,
-                                                       tf.square(grad)))
+            tf.multiply(beta_2_t, v) + tf.multiply(1.0 - beta_2_t,
+                                                   tf.square(grad)))
 
         update = next_m / (tf.sqrt(next_v) + epsilon_t)
 
@@ -169,11 +157,11 @@ class AdamWeightDecayOptimizer(Optimizer):
 
         # Standard Adam update.
         next_m = (
-                tf.multiply(beta_1_t, m) +
-                tf.multiply(1.0 - beta_1_t, grad))
+            tf.multiply(beta_1_t, m) +
+            tf.multiply(1.0 - beta_1_t, grad))
         next_v = (
-                tf.multiply(beta_2_t, v) + tf.multiply(1.0 - beta_2_t,
-                                                       tf.square(grad)))
+            tf.multiply(beta_2_t, v) + tf.multiply(1.0 - beta_2_t,
+                                                   tf.square(grad)))
 
         update = next_m / (tf.sqrt(next_v) + epsilon_t)
 
@@ -232,8 +220,8 @@ class AdamWeightDecayOptimizer(Optimizer):
 
     def _resource_scatter_add(self, x, i, v):
         with ops.control_dependencies(
-                [resource_variable_ops.resource_scatter_add(
-                    x.handle, i, v)]):
+            [resource_variable_ops.resource_scatter_add(
+                x.handle, i, v)]):
             return x.value()
 
     def _resource_apply_sparse(self, grad, var, indices):
