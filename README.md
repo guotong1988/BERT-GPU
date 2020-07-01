@@ -21,6 +21,8 @@ tensorflow 1.14
 
 Edit `n_gpus` in `run_pretraining_gpu.py`
 
+batch_size is the batch_size per GPU, not the global_batch_size
+
 # DATA
 
 In `sample_text.txt`, sentence is end by \n, paragraph is splitted by empty line.
