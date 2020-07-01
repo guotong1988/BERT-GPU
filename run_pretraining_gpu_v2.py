@@ -20,7 +20,7 @@ from __future__ import print_function
 
 import os
 import modeling
-import optimization_v2 as optimization
+import optimization_gpu as optimization
 import tensorflow as tf
 from tensorflow.python.estimator.run_config import RunConfig
 from tensorflow.python.estimator.estimator import Estimator
