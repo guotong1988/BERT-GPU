@@ -437,7 +437,6 @@ def main(_):
     dist_strategy = tf.contrib.distribute.MirroredStrategy(
         num_gpus=FLAGS.n_gpus,
         cross_device_ops=AllReduceCrossDeviceOps('nccl', num_packs=FLAGS.n_gpus),
-        # cross_device_ops=AllReduceCrossDeviceOps('hierarchical_copy'),
     )
     log_every_n_steps = 8
     run_config = RunConfig(
@@ -447,6 +446,17 @@ def main(_):
         model_dir=FLAGS.output_dir,
         save_checkpoints_steps=FLAGS.save_checkpoints_steps)
 
+    ''' IF ERROR COULD TRY
+    distribution = tf.contrib.distribute.MirroredStrategy(
+        devices=["device:GPU:%d" % i for i in range(FLAGS.n_gpus)],
+        cross_tower_ops=tf.distribute.HierarchicalCopyAllReduce())
+    run_config = RunConfig(
+        train_distribute=distribution,
+        log_step_count_steps=log_every_n_steps,
+        model_dir=FLAGS.output_dir,
+        save_checkpoints_steps=FLAGS.save_checkpoints_steps)
+    '''    
+    
     model_fn = model_fn_builder(
         bert_config=bert_config,
         init_checkpoint=FLAGS.init_checkpoint,
