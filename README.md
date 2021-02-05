@@ -5,7 +5,7 @@ BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
 # PRINCIPLE
 
-More gpu means more data in a batch. And the gradients of a batch data is averaged for back-propagation. So more gpu final means a lower learning rate. Lower learning rate result in better pre-training.
+More gpu means more data in a batch. And the gradients of a batch data is averaged for back-propagation. So more gpu finally means a lower learning rate. Lower learning rate result in better pre-training.
 
 # REQUIREMENT
 
