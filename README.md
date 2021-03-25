@@ -29,7 +29,6 @@ tensorflow 1.14 - 1.15
 
 Edit `n_gpus` in `run_pretraining_gpu.py`
 
-`batch_size` is the `batch_size` per GPU, not the `global_batch_size`
 
 # DATA
 
@@ -45,4 +44,7 @@ This BERT with pretrain loss 2.05: ACC 90.1, AUC 96.3
 
 # NOTE
 
+### 1)
 For `HierarchicalCopyAllReduce` `MirroredStrategy`, `global_step/sec` shows the sum of multi gpus' steps.
+### 2)
+`batch_size` is the `batch_size` per GPU, not the `global_batch_size`
