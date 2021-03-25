@@ -29,7 +29,7 @@ tensorflow 1.14 - 1.15
 
 Edit `n_gpus` in `run_pretraining_gpu.py`
 
-batch_size is the batch_size per GPU, not the global_batch_size
+`batch_size` is the `batch_size` per GPU, not the `global_batch_size`
 
 # DATA
 
