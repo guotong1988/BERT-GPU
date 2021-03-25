@@ -32,7 +32,7 @@ Edit `n_gpus` in `run_pretraining_gpu.py`
 
 # DATA
 
-In `sample_text.txt`, sentence is end by \n, paragraph is splitted by empty line.
+In `sample_text.txt`, sentence is end by `\n`, paragraph is splitted by empty line.
 
 # EXPERIMENT RESULT ON DOWNSTREAM TASKS
 
