@@ -35,7 +35,7 @@ batch_size is the batch_size per GPU, not the global_batch_size
 
 In `sample_text.txt`, sentence is end by \n, paragraph is splitted by empty line.
 
-# EXPERIMENT RESULT
+# EXPERIMENT RESULT ON DOWNSTREAM TASKS
 
 Quora question pairs English dataset,
 
