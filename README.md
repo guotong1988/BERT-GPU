@@ -15,7 +15,7 @@ If the learning rate of a data is fixed, then the learning rate of a batch is la
 
 python 3
 
-tensorflow 1.14
+tensorflow 1.14 - 1.15
 
 # TRAINING
 
