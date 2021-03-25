@@ -45,4 +45,4 @@ This BERT with pretrain loss 2.05: ACC 90.1, AUC 96.3
 
 # Note
 
-For `HierarchicalCopyAllReduce` `MirroredStrategy`, `global_step/sec` shows the sum of multi gpus' steps 
+For `HierarchicalCopyAllReduce` `MirroredStrategy`, `global_step/sec` shows the sum of multi gpus' steps.
