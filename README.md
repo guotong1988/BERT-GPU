@@ -5,11 +5,11 @@ BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
 # PRINCIPLE
 
-More gpu means more data in a batch. And the gradients of a batch data is averaged for back-propagation.
+More gpu means more data in a batch (, batch size is larger). And the gradients of a batch data is averaged for back-propagation.
 
-If the learning rate of a batch is fixed, then the learning rate of a data is smaller.
+If the learning rate of one batch is fixed, then the learning rate of one data is smaller, when batch size is larger.
 
-If the learning rate of a data is fixed, then the learning rate of a batch is larger.
+If the learning rate of one data is fixed, then the sum learning rate of one batch is larger, when batch size is larger.
 
 **Conclusion:** more gpu --> larger learning rate.
 
