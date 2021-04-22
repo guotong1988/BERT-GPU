@@ -11,7 +11,7 @@ If the learning rate of a batch is fixed, then the learning rate of a data is sm
 
 If the learning rate of a data is fixed, then the learning rate of a batch is larger.
 
-Conclusion: more gpu --> larger learning rate.
+**Conclusion:** more gpu --> larger learning rate.
 
 # REQUIREMENT
 
