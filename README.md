@@ -11,7 +11,7 @@ If the sum learning rate of one batch is fixed, then the learning rate of one da
 
 If the learning rate of one data is fixed, then the sum learning rate of one batch is larger, when batch size is larger.
 
-**Conclusion:** more gpu --> larger learning rate.
+**Conclusion:** more gpu --> larger sum learning rate of one batch.
 
 # REQUIREMENT
 
