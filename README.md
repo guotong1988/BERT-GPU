@@ -3,7 +3,7 @@
 
 BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
-# PRINCIPLE
+# REASONABLE
 
 More gpu means more data in a batch (, batch size is larger). And the gradients of a batch data is averaged for back-propagation.
 
