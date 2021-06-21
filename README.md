@@ -13,6 +13,10 @@ If the learning rate of one data is fixed, then the sum learning rate of one bat
 
 **Conclusion:** More gpu --> Larger sum learning rate of one batch --> Faster training.
 
+# WHATS NEW
+
+Using 1-GPU vs using 4-GPU for the same learning rate and same pre-training steps will be no difference of 0.1%.
+
 # REQUIREMENT
 
 python 3
@@ -50,3 +54,5 @@ This BERT with pretrain loss 2.05: ACC 90.1, AUC 96.3
 For `HierarchicalCopyAllReduce` `MirroredStrategy`, `global_step/sec` shows the sum of multi gpus' steps.
 ### 2)
 `batch_size` is the `batch_size` per GPU, not the `global_batch_size`
+
+
