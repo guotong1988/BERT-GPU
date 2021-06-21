@@ -15,7 +15,7 @@ If the learning rate of one data is fixed, then the sum learning rate of one bat
 
 # WHATS NEW
 
-Using 1-GPU (100 batch size) vs using 4-GPU (400 batch size) for the same learning rate (0.00001) and same pre-training steps (1,000,000) will be no difference of 0.1% in downstream task.
+Using 1-GPU (100 batch size) vs using 4-GPU (400 batch size) for the same learning rate (0.00001) and same pre-training steps (1,000,000) will be no difference of 0.1% in downstream task accuracy.
 
 # REQUIREMENT
 
